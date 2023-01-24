@@ -1,0 +1,137 @@
+<style>
+    /* Fonts Form Google Font ::- https://fonts.google.com/  -:: */
+    @import url('https://fonts.googleapis.com/css?family=Abel|Abril+Fatface|Alegreya|Arima+Madurai|Dancing+Script|Dosis|Merriweather|Oleo+Script|Overlock|PT+Serif|Pacifico|Playball|Playfair+Display|Share|Unica+One|Vibur');
+
+    /* End Fonts */
+    /* Start Global rules */
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    /* End Global rules */
+
+    /* Start body rules */
+    body {
+        background-image: linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%);
+        background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+
+        font-family: 'Vibur', cursive;
+        /*   the main font */
+        font-family: 'Abel', sans-serif;
+        opacity: .95;
+        padding: 50px;
+        /* background-image: linear-gradient(to top, #d9afd9 0%, #97d9e1 100%); */
+    }
+
+    .input-item {
+        background: #fff;
+        color: #333;
+        padding: 14.5px 0px 15px 9px;
+        border-radius: 5px 0px 0px 5px;
+    }
+
+    button {
+        display: inline-block;
+        color: #252537;
+
+        width: 280px;
+        height: 50px;
+
+        padding: 0 20px;
+        background: #fff;
+        border-radius: 5px;
+
+        outline: none;
+        border: none;
+
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s linear;
+
+        margin: 7% auto;
+        letter-spacing: 0.05em;
+    }
+
+    .item span {
+        padding: 30px;
+        text-align: center;
+        margin-left: 30px;
+        margin-right: 80px;
+    }
+</style>
+
+<body>
+    <h2>Hello world</h2> <div><a href="index.html">Se déconnecter</a></div>
+    <br>
+    <br>
+    <h3>Liste des produits diponibles</h3>
+
+    <div>
+        <input style="width: 300px;" type="text" name="nom-produit" id="nom-produit" class="input-item" placeholder="Recherche produit">
+        <button onClick="search()">Rechercher</button>
+    </div>
+
+    <div class="item">
+        <span>nom</span>
+        <span>description</span>
+    </div>
+    <div class="items" id="items">
+
+    </div>
+
+
+</body>
+
+<script>
+
+    requestSearch()
+
+    function search(){
+        var foo = document.getElementById("nom-produit");
+        requestSearch(foo.value)
+    }
+
+    function requestSearch(produitName) {
+        const Http = new XMLHttpRequest();
+
+        if(produitName == undefined || produitName === "")
+            var url = 'http://localhost:5000/produits';
+        else
+            var url = 'http://localhost:5000/produits?nom='+produitName;
+
+        Http.open("GET", url);
+        Http.send();
+
+        Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+            json = JSON.parse(Http.responseText);
+            console.log(json)
+
+            var itemsDocument = document.getElementById("items");
+            var child = itemsDocument.lastElementChild;
+            while (child) {
+                itemsDocument.removeChild(child);
+                child = itemsDocument.lastElementChild;
+            }
+
+            json.forEach(element => {
+                let div = document.createElement("div");
+                div.className = "item"
+
+                let span1 = document.createElement("span");
+                span1.innerHTML =  element.nom;
+                div.appendChild(span1)
+
+                let span2 = document.createElement("span");
+                span2.innerHTML =  element.description;
+                div.appendChild(span2)
+                
+                itemsDocument.appendChild(div)
+            });
+        }
+    }
+</script>
